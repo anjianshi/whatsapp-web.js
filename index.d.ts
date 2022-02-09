@@ -62,7 +62,7 @@ declare namespace WAWebJS {
 
         /** Get all current contact instances */
         getContacts(): Promise<Contact[]>
-        
+
         /** Get the country code of a WhatsApp ID. (154185968@c.us) => (1) */
         getCountryCode(number: string): Promise<string>
 
@@ -124,13 +124,13 @@ declare namespace WAWebJS {
         /** Mark the Chat as unread */
         markChatUnread(chatId: string): Promise<void>
 
-        /** 
+        /**
          * Sets the current user's status message
          * @param status New status message
          */
         setStatus(status: string): Promise<void>
 
-        /** 
+        /**
          * Sets the current user's display name
          * @param displayName New display name
          */
@@ -217,9 +217,9 @@ declare namespace WAWebJS {
         on(event: 'message_revoke_everyone', listener: (
             /** The message that was revoked, in its current state. It will not contain the original message's data */
             message: Message,
-            /**The message that was revoked, before it was revoked. 
-             * It will contain the message's original data. 
-             * Note that due to the way this data is captured, 
+            /**The message that was revoked, before it was revoked.
+             * It will contain the message's original data.
+             * Note that due to the way this data is captured,
              * it may be possible that this param will be undefined. */
             revoked_msg?: Message | null
         ) => void): this
@@ -249,9 +249,9 @@ declare namespace WAWebJS {
 
     /** Current connection information */
     export interface ClientInfo {
-        /** 
-         * Current user ID 
-         * @deprecated Use .wid instead 
+        /**
+         * Current user ID
+         * @deprecated Use .wid instead
          */
         me: ContactId
         /** Current user ID */
@@ -311,7 +311,7 @@ declare namespace WAWebJS {
         /** User agent to use in puppeteer.
          * @default 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.109 Safari/537.36' */
         userAgent?: string
-        /** Ffmpeg path to use when formating videos to webp while sending stickers 
+        /** Ffmpeg path to use when formating videos to webp while sending stickers
          * @default 'ffmpeg' */
         ffmpegPath?: string
     }
@@ -334,9 +334,9 @@ declare namespace WAWebJS {
     export interface CreateGroupResult {
         /** ID for the group that was just created */
         gid: string,
-        /** participants that were not added to the group. 
+        /** participants that were not added to the group.
          * Keys represent the ID for participant that was not added and its value is a status code
-         * that represents the reason why participant could not be added. 
+         * that represents the reason why participant could not be added.
          * This is usually 403 if the user's privacy settings don't allow you to add them to groups. */
         missingParticipants: Record<string, string>
     }
@@ -348,7 +348,7 @@ declare namespace WAWebJS {
         body: string,
         /** ID for the Chat that this groupNotification was sent for */
         chatId: string,
-        /** ID that represents the groupNotification 
+        /** ID that represents the groupNotification
          *  @todo create a more specific type for the id object */
         id: object,
         /** Contact IDs for the users that were affected by this GroupNotification */
@@ -368,7 +368,7 @@ declare namespace WAWebJS {
         reply: (content: MessageContent, options?: MessageSendOptions) => Promise<Message>,
 
     }
-    
+
     /** whatsapp web url */
     export const WhatsWebURL: string
 
@@ -508,7 +508,7 @@ declare namespace WAWebJS {
 
     /**
      * Represents a Message on WhatsApp
-     * 
+     *
      * @example
      * {
      *   mediaKey: undefined,
@@ -623,13 +623,13 @@ declare namespace WAWebJS {
         getMentions: () => Promise<Contact[]>,
         /** Returns the quoted message, if any */
         getQuotedMessage: () => Promise<Message>,
-        /** 
-         * Sends a message as a reply to this message. 
+        /**
+         * Sends a message as a reply to this message.
          * If chatId is specified, it will be sent through the specified Chat.
-         * If not, it will send the message in the same Chat as the original message was sent. 
+         * If not, it will send the message in the same Chat as the original message was sent.
          */
         reply: (content: MessageContent, chatId?: string, options?: MessageSendOptions) => Promise<Message>,
-        /** 
+        /**
          * Forwards this message to another chat
          */
         forward: (chat: Chat | string) => Promise<void>,
@@ -662,7 +662,7 @@ declare namespace WAWebJS {
         description?: string | null
         latitude: string
         longitude: string
-        
+
         constructor(latitude: number, longitude: number, description?: string)
     }
 
@@ -747,7 +747,7 @@ declare namespace WAWebJS {
     /**
      * Represents a Contact on WhatsApp
      *
-     * @example 
+     * @example
      * {
      *   id: {
      *     server: 'c.us',
@@ -811,22 +811,30 @@ declare namespace WAWebJS {
         /** @todo missing documentation */
         verifiedLevel?: undefined,
         /** @todo missing documentation */
-        verifiedName?: undefined,
+        verifiedName?: string,
+        /** @todo missing documentation */
+        displayName?: string,
+        /** @todo missing documentation */
+        formattedName?: string,
+        /** @todo missing documentation */
+        formattedShortName?: string,
+        /** @todo missing documentation */
+        formattedUser?: string,
 
         /** Returns the contact's profile picture URL, if privacy settings allow it */
         getProfilePicUrl: () => Promise<string>,
 
-        /** Returns the Chat that corresponds to this Contact.  
+        /** Returns the Chat that corresponds to this Contact.
          * Will return null when getting chat for currently logged in user.
          */
         getChat: () => Promise<Chat>,
-        
+
         /** Returns the contact's countrycode, (1541859685@c.us) => (1) */
         getCountryCode(): Promise<string>,
-        
+
         /** Returns the contact's formatted phone number, (12345678901@c.us) => (+1 (234) 5678-901) */
         getFormattedNumber(): Promise<string>,
-        
+
         /** Blocks this contact from WhatsApp */
         block: () => Promise<boolean>,
 
@@ -845,7 +853,7 @@ declare namespace WAWebJS {
     }
 
     export interface BusinessContact extends Contact {
-        /** 
+        /**
          * The contact's business profile
          * @todo add a more specific type for the object
          */
@@ -933,7 +941,7 @@ declare namespace WAWebJS {
     export interface MessageSearchOptions {
         /**
          * The amount of messages to return. If no limit is specified, the available messages will be returned.
-         * Note that the actual number of returned messages may be smaller if there aren't enough messages in the conversation. 
+         * Note that the actual number of returned messages may be smaller if there aren't enough messages in the conversation.
          * Set this to Infinity to load all messages.
          */
         limit?: number
@@ -941,7 +949,7 @@ declare namespace WAWebJS {
 
     /**
      * Id that represents the chat
-     * 
+     *
      * @example
      * id: {
      *   server: 'c.us',
@@ -978,11 +986,11 @@ declare namespace WAWebJS {
     }
 
     /** Promotes or demotes participants by IDs to regular users or admins */
-    export type ChangeParticipantsPermisions = 
+    export type ChangeParticipantsPermisions =
         (participantIds: Array<string>) => Promise<{ status: number }>
 
     /** Adds or removes a list of participants by ID to the group */
-    export type ChangeGroupParticipants = 
+    export type ChangeGroupParticipants =
         (participantIds: Array<string>) => Promise<{
             status: number;
             participants: Array<{
@@ -1015,14 +1023,14 @@ declare namespace WAWebJS {
         setSubject: (subject: string) => Promise<void>;
         /** Updates the group description */
         setDescription: (description: string) => Promise<void>;
-        /** Updates the group settings to only allow admins to send messages 
-         * @param {boolean} [adminsOnly=true] Enable or disable this option 
+        /** Updates the group settings to only allow admins to send messages
+         * @param {boolean} [adminsOnly=true] Enable or disable this option
          * @returns {Promise<boolean>} Returns true if the setting was properly updated. This can return false if the user does not have the necessary permissions.
          */
         setMessagesAdminsOnly: (adminsOnly?: boolean) => Promise<boolean>;
         /**
          * Updates the group settings to only allow admins to edit group info (title, description, photo).
-         * @param {boolean} [adminsOnly=true] Enable or disable this option 
+         * @param {boolean} [adminsOnly=true] Enable or disable this option
          * @returns {Promise<boolean>} Returns true if the setting was properly updated. This can return false if the user does not have the necessary permissions.
          */
         setInfoAdminsOnly: (adminsOnly?: boolean) => Promise<boolean>;
@@ -1161,7 +1169,7 @@ declare namespace WAWebJS {
         /** The note sent with the payment */
         paymentNote  : string;
     }
-    
+
     /**
      * Represents a Call on WhatsApp
      *
@@ -1206,17 +1214,17 @@ declare namespace WAWebJS {
         sections: Array<any>
         title?: string | null
         footer?: string | null
-        
+
         constructor(body: string, buttonText: string, sections: Array<any>, title?: string | null, footer?: string | null)
     }
-    
+
     /** Message type buttons */
     export class Buttons {
         body: string | MessageMedia
         buttons: Array<{ buttonId: string; buttonText: {displayText: string}; type: number }>
         title?: string | null
         footer?: string | null
-        
+
         constructor(body: string, buttons: Array<{ id?: string; body: string }>, title?: string | null, footer?: string | null)
     }
 }
