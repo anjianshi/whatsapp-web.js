@@ -67,14 +67,14 @@ exports.LoadUtils = () => {
         return false;
 
     };
-    
+
     window.WWebJS.sendMessage = async (chat, content, options = {}) => {
         let attOptions = {};
         if (options.attachment) {
-            attOptions = options.sendMediaAsSticker 
+            attOptions = options.sendMediaAsSticker
                 ? await window.WWebJS.processStickerData(options.attachment)
                 : await window.WWebJS.processMediaData(options.attachment, {
-                    forceVoice: options.sendAudioAsVoice, 
+                    forceVoice: options.sendAudioAsVoice,
                     forceDocument: options.sendMediaAsDocument,
                     forceGif: options.sendVideoAsGif
                 });
@@ -152,7 +152,7 @@ exports.LoadUtils = () => {
                 options = { ...options, ...preview };
             }
         }
-        
+
         let buttonOptions = {};
         if(options.buttons){
             let caption;
@@ -192,7 +192,7 @@ exports.LoadUtils = () => {
             delete options.list;
             delete listOptions.list.footer;
         }
-                
+
         const newMsgId = new window.Store.MsgKey({
             fromMe: true,
             remote: chat.id,
@@ -238,7 +238,7 @@ exports.LoadUtils = () => {
         if (mediaInfo.mimetype !== 'image/webp') throw new Error('Invalid media type');
 
         const file = window.WWebJS.mediaInfoToFile(mediaInfo);
-        let filehash = await window.WWebJS.getFileHash(file);	
+        let filehash = await window.WWebJS.getFileHash(file);
         let mediaKey = await window.WWebJS.generateHash(32);
 
         const controller = new AbortController();
@@ -324,11 +324,11 @@ exports.LoadUtils = () => {
 
     window.WWebJS.getMessageModel = message => {
         const msg = message.serialize();
-        
+
         msg.isEphemeral = message.isEphemeral;
         msg.isStatusV3 = message.isStatusV3;
-        msg.links = (message.getLinks()).map(link => ({ 
-            link: link.href, 
+        msg.links = (message.getLinks()).map(link => ({
+            link: link.href,
             isSuspicious: Boolean(link.suspiciousCharacters && link.suspiciousCharacters.size)
         }));
 
@@ -345,9 +345,9 @@ exports.LoadUtils = () => {
         if(typeof msg.id.remote === 'object') {
             msg.id = Object.assign({}, msg.id, {remote: msg.id.remote._serialized});
         }
-        
+
         delete msg.pendingAckUpdate;
-        
+
         return msg;
     };
 
@@ -399,6 +399,11 @@ exports.LoadUtils = () => {
         res.isBlocked = contact.isContactBlocked;
         res.userid = contact.userid;
 
+        res.displayName = contact.displayName;
+        res.formattedName = contact.formattedName;
+        res.formattedShortName = contact.formattedShortName;
+        res.formattedUser = contact.formattedUser;
+
         return res;
     };
 
@@ -439,7 +444,7 @@ exports.LoadUtils = () => {
         return window.btoa( binary );
     };
 
-    window.WWebJS.getFileHash = async (data) => {                  
+    window.WWebJS.getFileHash = async (data) => {
         let buffer = await data.arrayBuffer();
         const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
         return btoa(String.fromCharCode(...new Uint8Array(hashBuffer)));
@@ -494,7 +499,7 @@ exports.LoadUtils = () => {
     window.WWebJS.getLabelModel = label => {
         let res = label.serialize();
         res.hexColor = label.hexColor;
-        
+
         return res;
     };
 

@@ -108,7 +108,12 @@ class Contact extends Base {
          * @type {boolean}
          */
         this.isBlocked = data.isBlocked;
-        
+
+        this.displayName = data.displayName;
+        this.formattedName = data.formattedName;
+        this.formattedShortName = data.formattedShortName;
+        this.formattedUser = data.formattedUser;
+
         return super._patch(data);
     }
 
@@ -127,7 +132,7 @@ class Contact extends Base {
     async getFormattedNumber() {
         return await this.client.getFormattedNumber(this.id._serialized);
     }
-    
+
     /**
      * Returns the contact's countrycode, (1541859685@c.us) => (1)
      * @returns {Promise<string>}
@@ -135,9 +140,9 @@ class Contact extends Base {
     async getCountryCode() {
         return await this.client.getCountryCode(this.id._serialized);
     }
-    
+
     /**
-     * Returns the Chat that corresponds to this Contact. 
+     * Returns the Chat that corresponds to this Contact.
      * Will return null when getting chat for currently logged in user.
      * @returns {Promise<Chat>}
      */
@@ -191,7 +196,7 @@ class Contact extends Base {
 
         return about.status;
     }
-    
+
 }
 
 module.exports = Contact;
