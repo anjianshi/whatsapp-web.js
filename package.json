@@ -1,6 +1,6 @@
 {
   "name": "@anjianshi/whatsapp-web.js",
-  "version": "1.15.4",
+  "version": "1.15.6-multidevice",
   "description": "Library for interacting with the WhatsApp Web API (Forked, make puppeteer as a peerDependencies)",
   "main": "./index.js",
   "typings": "./index.d.ts",
