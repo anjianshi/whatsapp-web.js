@@ -452,6 +452,11 @@ exports.LoadUtils = () => {
         res.isBlocked = contact.isContactBlocked;
         res.userid = contact.userid;
 
+        res.displayName = contact.displayName;
+        res.formattedName = contact.formattedName;
+        res.formattedShortName = contact.formattedShortName;
+        res.formattedUser = contact.formattedUser;
+
         return res;
     };
 
