@@ -13,8 +13,8 @@ exports.ExposeStore = (moduleRaidStr) => {
     window.Store.Cmd = window.mR.findModule('Cmd')[0].Cmd;
     window.Store.CryptoLib = window.mR.findModule('decryptE2EMedia')[0];
     window.Store.DownloadManager = window.mR.findModule('downloadManager')[0].downloadManager;
-    window.Store.Features = window.mR.findModule('FEATURE_CHANGE_EVENT')[0].GK;
-    window.Store.genId = window.mR.findModule('newTag')[0].newTag;
+    window.Store.MDBackend = window.mR.findModule('isMDBackend')[0].isMDBackend();
+    window.Store.Features = window.mR.findModule('FEATURE_CHANGE_EVENT')[0].LegacyPhoneFeatures;
     window.Store.GroupMetadata = window.mR.findModule((module) => module.default && module.default.handlePendingInvite)[0].default;
     window.Store.Invite = window.mR.findModule('sendJoinGroupViaInvite')[0];
     window.Store.InviteInfo = window.mR.findModule('sendQueryGroupInvite')[0];
@@ -27,14 +27,13 @@ exports.ExposeStore = (moduleRaidStr) => {
     window.Store.MsgKey = window.mR.findModule((module) => module.default && module.default.fromString)[0].default;
     window.Store.MessageInfo = window.mR.findModule('sendQueryMsgInfo')[0];
     window.Store.OpaqueData = window.mR.findModule(module => module.default && module.default.createFromData)[0].default;
-    window.Store.QueryExist = window.mR.findModule(module => typeof module.default === 'function' && module.default.toString().includes('Should not reach queryExists MD'))[0].default;
+    window.Store.QueryExist = window.mR.findModule('queryExists')[0].queryExists;
     window.Store.QueryProduct = window.mR.findModule('queryProduct')[0];
     window.Store.QueryOrder = window.mR.findModule('queryOrder')[0];
     window.Store.SendClear = window.mR.findModule('sendClear')[0];
     window.Store.SendDelete = window.mR.findModule('sendDelete')[0];
     window.Store.SendMessage = window.mR.findModule('addAndSendMsgToChat')[0];
     window.Store.SendSeen = window.mR.findModule('sendSeen')[0];
-    window.Store.Sticker = window.mR.findModule('Sticker')[0].Sticker;
     window.Store.User = window.mR.findModule('getMaybeMeUser')[0];
     window.Store.UploadUtils = window.mR.findModule((module) => (module.default && module.default.encryptAndUpload) ? module.default : null)[0].default;
     window.Store.UserConstructor = window.mR.findModule((module) => (module.default && module.default.prototype && module.default.prototype.isServer && module.default.prototype.isUser) ? module.default : null)[0].default;
@@ -42,7 +41,7 @@ exports.ExposeStore = (moduleRaidStr) => {
     window.Store.VCard = window.mR.findModule('vcardFromContactModel')[0];
     window.Store.Wap = window.mR.findModule('queryLinkPreview')[0].default;
     window.Store.WidFactory = window.mR.findModule('createWid')[0];
-    window.Store.getProfilePicFull = window.mR.findModule('getProfilePicFull')[0].getProfilePicFull;
+    window.Store.ProfilePic = window.mR.findModule('profilePicResync')[0];
     window.Store.PresenceUtils = window.mR.findModule('sendPresenceAvailable')[0];
     window.Store.ChatState = window.mR.findModule('sendChatStateComposing')[0];
     window.Store.GroupParticipants = window.mR.findModule('sendPromoteParticipants')[0];
@@ -161,7 +160,7 @@ exports.LoadUtils = () => {
             delete options.linkPreview;
 
             // Not supported yet by WhatsApp Web on MD
-            if(!window.Store.Features.features.MD_BACKEND) {
+            if(!window.Store.MDBackend) {
                 const link = window.Store.Validators.findLink(content);
                 if (link) {
                     const preview = await window.Store.Wap.queryLinkPreview(link.url);
@@ -213,12 +212,12 @@ exports.LoadUtils = () => {
         }
 
         const meUser = window.Store.User.getMaybeMeUser();
-        const isMD = window.Store.Features.features.MD_BACKEND;
+        const isMD = window.Store.MDBackend;
 
         const newMsgId = new window.Store.MsgKey({
             from: meUser,
             to: chat.id,
-            id: window.Store.genId(),
+            id: window.Store.MsgKey.newId(),
             participant: isMD && chat.id.isGroup() ? meUser : undefined,
             selfDir: 'out',
         });
@@ -519,7 +518,7 @@ exports.LoadUtils = () => {
     };
 
     window.WWebJS.sendChatstate = async (state, chatId) => {
-        if (window.Store.Features.features.MD_BACKEND) {
+        if (window.Store.MDBackend) {
             chatId = window.Store.WidFactory.createWid(chatId);
         }
         switch (state) {
